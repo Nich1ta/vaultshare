@@ -1,0 +1,70 @@
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+body {
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: system-ui, sans-serif;
+  background: #f2f4f7;
+}
+button {
+    margin-top: 8px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+button:hover {
+    background: #1d4ed8;
+}
+input, button {
+  padding: 8px;
+  font-size: 1rem;
+  border-radius: 4px;
+}
+input {
+    border: 1px solid #ccc;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 360px;
+  padding: 32px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.note-box {
+  background: #eef4ff;
+  border-left: 4px solid #2563eb;
+  padding: 15px;
+  margin: 15px 0;
+  font-family: sans-serif;
+  border-radius: 8px;
+}
+a {
+    color: #2563eb;
+}
+label{
+    margin-top: 12px;
+}
+input:focus{
+    outline: none;
+    border-color:#2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+h1 {
+  margin: 0;
+}
+
+.tagline {
+  margin: 4px 0 16px;
+  color: #666;
+}
