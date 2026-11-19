@@ -123,11 +123,20 @@ button:hover {
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .content {
   flex: 1;
   padding: 24px 32px;
+}
+
+.content main {
+  max-width: 1280px;
 }
 
 /* Sidebar links stacked vertically */
@@ -159,8 +168,8 @@ button:hover {
   font-weight: 600;
 }
 
-.card-meta {
-  margin-top: 4px !important;
+.card .card-meta {
+  margin-top: 4px;
   color: var(--text-muted);
   font-size: 0.875rem;
 }
@@ -213,6 +222,7 @@ button:hover {
   align-items: center;
   gap: 12px;
   margin-bottom: 24px;
+  max-width: 1280px;
 }
 
 .topbar input {
@@ -248,3 +258,82 @@ button:hover {
   background: #fff4e5;
   color: #b45309;
 }
+/* ===========================
+   Group page
+   =========================== */
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.group-header h2 {
+  margin: 0;
+}
+
+/* Members and activity: lists without bullets */
+.member-list,
+.activity {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.member-list li,
+.activity li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--background);
+}
+
+.member-list li:last-child,
+.activity li:last-child {
+  border-bottom: none;
+}
+
+.role {
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  background: var(--background);
+  color: var(--text-muted);
+}
+.activity li {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.activity-time {
+  margin-left: 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.group-header button {
+  margin: 0;
+  background: var(--surface);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.group-header button:hover {
+  background: var(--primary-light);
+}
+.group-header p {
+  margin: 4px 0 0;
+  color: var(--text-muted);
+}
+.group-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+

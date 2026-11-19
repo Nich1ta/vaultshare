@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VaultShare - Study group</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="app">
+    <!-- ===== Sidebar ===== -->
+    <aside class="sidebar">
+      <h1 class="logo">VaultShare</h1>
+
+      <nav>
+        <a href="vault.html">My files</a>
+
+        <a href="#">Favorites</a>
+        <a href="#">Expiring documents</a>
+        <a href="#">Activity</a>
+
+        <h2>Groups</h2>
+        <a href="group.html" class="active">Study group</a>
+        <a href="#">Roommates</a>
+        <a href="#">Family</a>
+      </nav>
+
+      <div class="storage">
+        <p>1.2 GB of 10 GB used</p>
+        <progress value="1.2" max="10"></progress>
+      </div>
+    </aside>
+
+    <!-- ===== Main area ===== -->
+    <div class="content">
+      <header class="topbar">
+        <input
+          type="search"
+          placeholder="Search files..."
+          aria-label="Search files"
+        />
+
+        <span class="badge">End-to-end encrypted</span>
+        <button>+ Upload</button>
+      </header>
+
+      <main>
+        <div class="group-header">
+          <div>
+            <h2>Study group</h2>
+            <p>4 members · created 2 Nov</p>
+          </div>
+          <button>+ Invite member</button>
+        </div>
+
+        <div class="group-layout">
+          <section>
+            <h3>Members</h3>
+            <ul class="member-list">
+              <li>
+                <span>Nichita</span>
+                <span class="role">Owner</span>
+              </li>
+              <li>
+                <span>Davide</span>
+                <span class="role">Admin</span>
+              </li>
+              <li>
+                <span>Gaia</span>
+                <span class="role">Member</span>
+              </li>
+              <li>
+                <span>Jacopo</span>
+                <span class="role">Read-only</span>
+              </li>
+            </ul>
+
+            <h3>Shared files</h3>
+            <div class="grid">
+              <div class="card file">
+                <p class="card-title">FCA_notes.pdf</p>
+                <p class="card-meta">Uploaded by Davide · 17 Nov</p>
+                <span class="tag">#exam</span>
+              </div>
+              <div class="card file">
+                <p class="card-title">Cyber_notes.pdf</p>
+                <p class="card-meta">Uploaded by Gaia · 18 Nov</p>
+                <span class="tag">#exam</span>
+              </div>
+              <div class="card file">
+                <p class="card-title">Free GTA VI.zip</p>
+                <p class="card-meta">Uploaded by Nichita · 19 Nov</p>
+                <span class="tag">#games</span>
+              </div>
+            </div>
+          </section>
+
+          <aside>
+            <h3>Activity</h3>
+            <ul class="activity">
+              <li>
+                <span><strong>Nichita</strong> uploaded Free GTA VI.zip</span>
+                <span class="activity-time">1 hour ago</span>
+              </li>
+              <li>
+                <span><strong>Gaia</strong> uploaded Cyber_notes.pdf</span>
+                <span class="activity-time">Yesterday</span>
+              </li>
+              <li>
+                <span><strong>Davide</strong> uploaded FCA_notes.pdf</span>
+                <span class="activity-time">2 days ago</span>
+              </li>
+              <li>
+                <span
+                  ><strong>Nichita</strong> changed Jacopo's role to
+                  Read-only</span
+                >
+                <span class="activity-time">5 days ago</span>
+              </li>
+              <li>
+                <span
+                  ><strong>Sebastiano</strong> was removed from the group. The
+                  group key was rotated.</span
+                >
+                <span class="activity-time">1 week ago</span>
+              </li>
+              <li>
+                <span><strong>Nichita</strong> created the group</span>
+                <span class="activity-time">2 Nov</span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
