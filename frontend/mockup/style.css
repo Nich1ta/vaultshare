@@ -32,7 +32,7 @@ input {
     border: 1px solid #ccc;
 }
 
-.login-card {
+.login-card, .signup-card {
   width: 100%;
   max-width: 360px;
   padding: 32px;
@@ -48,6 +48,7 @@ input {
   margin: 15px 0;
   font-family: sans-serif;
   border-radius: 8px;
+  line-height: 1.4;
 }
 a {
     color: #2563eb;
