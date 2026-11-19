@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VaultShare - My files</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="app">
+    <!-- ===== Sidebar ===== -->
+    <aside class="sidebar">
+      <h1 class="logo">VaultShare</h1>
+
+      <nav>
+        <a href="archivio.html" class="active">My files</a>
+
+        <a href="#">Favorites</a>
+        <a href="#">Expiring documents</a>
+        <a href="#">Activity</a>
+
+        <h2>Groups</h2>
+        <a href="#">Study group</a>
+        <a href="#">Roommates</a>
+        <a href="#">Family</a>
+      </nav>
+
+      <div class="storage">
+        <p>1.2 GB of 10 GB used</p>
+        <progress value="1.2" max="10"></progress>
+      </div>
+    </aside>
+
+    <!-- ===== Main area ===== -->
+    <div class="content">
+      <header class="topbar">
+        <input
+          type="search"
+          placeholder="Search files..."
+          aria-label="Search files"
+        />
+
+        <span class="badge">End-to-end encrypted</span>
+        <button>+ Upload</button>
+      </header>
+
+      <main>
+        <h2>My files</h2>
+
+        <h3>Folders📁</h3>
+        <div class="grid">
+          <div class="card folder">
+            <p class="card-title">Uni</p>
+            <p class="card-meta">8 files</p>
+          </div>
+          <div class="card folder">
+            <p class="card-title">Finance</p>
+            <p class="card-meta">1 file</p>
+          </div>
+          <div class="card folder">
+            <p class="card-title">ID</p>
+            <p class="card-meta">2 files</p>
+          </div>
+        </div>
+
+        <h3>Files📄</h3>
+        <div class="grid">
+          <div class="card file">
+            <p class="card-title">Syllabus.pdf</p>
+            <p class="card-meta">1.2 MB · 13 Dec</p>
+            <span class="tag">#study</span>
+            <span class="badge expiring">Expires in 30d</span>
+          </div>
+          <div class="card file">
+            <p class="card-title">Lease.pdf</p>
+            <p class="card-meta">340 KB · 23 Nov</p>
+            <span class="tag">#home</span>
+            
+          </div><div class="card file">
+            <p class="card-title">Receipt.pdf</p>
+            <p class="card-meta">2 MB · 10 Nov</p>
+            <span class="tag">#finance</span>
+            
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
