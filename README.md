@@ -78,8 +78,8 @@ vaultshare/
 ## Roadmap
 
 - [x] Idea and initial design
-- [ ] HTML and CSS interface mockups
-- [ ] Data model and REST API design
+- [x] HTML and CSS interface mockups
+- [x] Data model and REST API design
 - [ ] Encryption prototype with the Web Crypto API
 - [ ] Backend: authentication, upload, folders
 - [ ] End-to-end file encryption
