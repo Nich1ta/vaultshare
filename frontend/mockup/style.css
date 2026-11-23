@@ -10,6 +10,7 @@
   --background: #f2f4f7;
   --surface: white;
   --radius: 8px;
+  --content-width: 1280px;
 }
 
 /* ===========================
@@ -30,7 +31,7 @@ a {
 }
 
 /* ===========================
-   Forms
+   Forms and buttons
    =========================== */
 form {
   display: flex;
@@ -96,38 +97,12 @@ button:hover {
 }
 
 /* ===========================
-   Components
-   =========================== */
-.note-box {
-  margin: 16px 0;
-  padding: 16px;
-  line-height: 1.4;
-  background: var(--primary-light);
-  border-left: 4px solid var(--primary);
-  border-radius: var(--radius);
-}
-
-/* ===========================
-   Vault page
+   App layout (vault, group)
    =========================== */
 /* Two columns: sidebar + content */
 .app {
   display: flex;
   min-height: 100vh;
-}
-
-.sidebar {
-  width: 240px;
-  padding: 24px 16px;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  box-sizing: border-box;
-  overflow-y: auto;
 }
 
 .content {
@@ -136,50 +111,40 @@ button:hover {
 }
 
 .content main {
-  max-width: 1280px;
+  max-width: var(--content-width);
 }
 
-/* Sidebar links stacked vertically */
+/* ===========================
+   Sidebar
+   =========================== */
+.sidebar {
+  width: 240px;
+  padding: 24px 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+}
+
+.logo {
+  font-size: 1.5rem;
+}
+
+.logo a {
+  color: inherit;
+  text-decoration: none;
+}
+
 .sidebar nav {
   display: flex;
   flex-direction: column;
   gap: 4px;
   margin-top: 24px;
-}
-/* Grid of cards */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-}
-
-.card {
-  padding: 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-
-.card p {
-  margin: 0;
-}
-
-.card-title {
-  font-weight: 600;
-}
-
-.card .card-meta {
-  margin-top: 4px;
-  color: var(--text-muted);
-  font-size: 0.875rem;
-}
-.card:hover {
-  border-color: var(--primary);
-  cursor: pointer;
-}
-/* Sidebar */
-.logo {
-  font-size: 1.5rem;
 }
 
 .sidebar nav a {
@@ -216,13 +181,15 @@ button:hover {
   width: 100%;
 }
 
-/* Top bar */
+/* ===========================
+   Top bar
+   =========================== */
 .topbar {
+  max-width: var(--content-width);
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 24px;
-  max-width: 1280px;
 }
 
 .topbar input {
@@ -234,17 +201,70 @@ button:hover {
   margin: 0 0 0 auto;
 }
 
-/* Tags and badges */
+/* ===========================
+   Cards and grid
+   =========================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.card:hover {
+  border-color: var(--primary);
+  cursor: pointer;
+}
+
+.card p {
+  margin: 0;
+}
+
+.card-title {
+  font-weight: 600;
+}
+
+.card .card-meta {
+  margin-top: 4px;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* ===========================
+   Components
+   =========================== */
+.note-box {
+  margin: 16px 0;
+  padding: 16px;
+  line-height: 1.4;
+  background: var(--primary-light);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius);
+}
+
+/* Pills: tags, badges, roles */
 .tag,
-.badge {
+.badge,
+.role {
   display: inline-block;
-  margin-top: 8px;
   padding: 2px 8px;
   font-size: 0.75rem;
   border-radius: 999px;
 }
 
-.tag {
+.tag,
+.badge {
+  margin-top: 8px;
+}
+
+.tag,
+.role {
   background: var(--background);
   color: var(--text-muted);
 }
@@ -258,6 +278,7 @@ button:hover {
   background: #fff4e5;
   color: #b45309;
 }
+
 /* ===========================
    Group page
    =========================== */
@@ -270,6 +291,31 @@ button:hover {
 
 .group-header h2 {
   margin: 0;
+}
+
+.group-header p {
+  margin: 4px 0 0;
+  color: var(--text-muted);
+}
+
+/* Secondary (outlined) button */
+.group-header button {
+  margin: 0;
+  background: var(--surface);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.group-header button:hover {
+  background: var(--primary-light);
+}
+
+/* Two columns: members + files | activity */
+.group-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  align-items: start;
 }
 
 /* Members and activity: lists without bullets */
@@ -285,10 +331,6 @@ button:hover {
 
 .member-list li,
 .activity li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
   padding: 12px 16px;
   border-bottom: 1px solid var(--background);
 }
@@ -298,42 +340,23 @@ button:hover {
   border-bottom: none;
 }
 
-.role {
-  padding: 2px 8px;
-  font-size: 0.75rem;
-  border-radius: 999px;
-  background: var(--background);
-  color: var(--text-muted);
+/* Members: name on the left, role on the right */
+.member-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
 }
+
+/* Activity: text on top, time underneath */
 .activity li {
+  display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 2px;
 }
+
 .activity-time {
-  margin-left: 0;
   font-size: 0.75rem;
   color: var(--text-muted);
   white-space: nowrap;
 }
-.group-header button {
-  margin: 0;
-  background: var(--surface);
-  color: var(--primary);
-  border: 1px solid var(--primary);
-}
-
-.group-header button:hover {
-  background: var(--primary-light);
-}
-.group-header p {
-  margin: 4px 0 0;
-  color: var(--text-muted);
-}
-.group-layout {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 32px;
-  align-items: start;
-}
-
