@@ -10,69 +10,73 @@
 
 ### Status codes
 
-| Code | Meaning |
-|---|---|
-| `200 OK` | Request succeeded |
-| `201 Created` | A new resource was created |
-| `204 No Content` | Succeeded, nothing to return (e.g. after a delete) |
-| `400 Bad Request` | Missing or invalid data |
-| `401 Unauthorized` | Missing or invalid token |
-| `403 Forbidden` | Logged in, but not allowed (e.g. a read-only member uploading) |
-| `404 Not Found` | The resource doesn't exist |
-| `409 Conflict` | The resource already exists (e.g. email already registered) |
-| `410 Gone` | The resource existed but is no longer available (e.g. an expired or used invite) |
-| `429 Too Many Requests` | Too many login attempts |
+| Code                    | Meaning                                                                          |
+| ----------------------- | -------------------------------------------------------------------------------- |
+| `200 OK`                | Request succeeded                                                                |
+| `201 Created`           | A new resource was created                                                       |
+| `204 No Content`        | Succeeded, nothing to return (e.g. after a delete)                               |
+| `400 Bad Request`       | Missing or invalid data                                                          |
+| `401 Unauthorized`      | Missing or invalid token                                                         |
+| `403 Forbidden`         | Logged in, but not allowed (e.g. a read-only member uploading)                   |
+| `404 Not Found`         | The resource doesn't exist                                                       |
+| `409 Conflict`          | The resource already exists (e.g. email already registered)                      |
+| `410 Gone`              | The resource existed but is no longer available (e.g. an expired or used invite) |
+| `429 Too Many Requests` | Too many login attempts                                                          |
 
 ## Endpoints
 
 ### Auth and users
-| Method | URL | Description | Req. |
-|---|---|---|---|
-| POST | `/auth/register` | Create an account | FR1 |
-| POST | `/auth/login` | Log in, returns a token | FR2 |
-| POST | `/auth/logout` | Log out | FR2 |
-| GET | `/users/me` | Current user's profile and storage usage | FR10 |
-| GET | `/users/:id/public-key` | A user's public key, to share keys with them | FR12 |
+
+| Method | URL                     | Description                                  | Req. |
+| ------ | ----------------------- | -------------------------------------------- | ---- |
+| POST   | `/auth/register`        | Create an account                            | FR1  |
+| POST   | `/auth/login`           | Log in, returns a token                      | FR2  |
+| GET    | `/auth/me`              | Current user's profile and storage usage     | FR10 |
+| GET    | `/users/:id/public-key` | A user's public key, to share keys with them | FR12 |
 
 ### Folders
-| Method | URL | Description | Req. |
-|---|---|---|---|
-| GET | `/folders` | List the user's folders | FR6 |
-| POST | `/folders` | Create a folder | FR6 |
-| PATCH | `/folders/:id` | Rename a folder | FR6 |
-| DELETE | `/folders/:id` | Delete a folder | FR8 |
+
+| Method | URL                  | Description                             | Req. |
+| ------ | -------------------- | --------------------------------------- | ---- |
+| GET    | `/folders?parentId=` | List folders (top level if no parentId) | FR6  |
+| POST   | `/folders`           | Create a folder                         | FR6  |
+| PATCH  | `/folders/:id`       | Rename a folder                         | FR6  |
+| DELETE | `/folders/:id`       | Delete a folder                         | FR8  |
 
 ### Files
-| Method | URL | Description | Req. |
-|---|---|---|---|
-| GET | `/files?folderId=&groupId=&tag=` | List files, with optional filters | FR7 |
-| POST | `/files` | Upload an encrypted file | FR4 |
-| GET | `/files/:id` | File metadata | FR5 |
-| GET | `/files/:id/content` | Download the encrypted file | FR5 |
-| PATCH | `/files/:id` | Move, rename, change tags or expiry | FR6, FR7, FR9 |
-| DELETE | `/files/:id` | Delete a file | FR8 |
-| POST | `/files/:id/links` | Create a time-limited share link | FR16 |
-| GET | `/links/:token` | Open a share link (no login needed) | FR16 |
+
+| Method | URL                              | Description                         | Req.          |
+| ------ | -------------------------------- | ----------------------------------- | ------------- |
+| GET    | `/files?folderId=&groupId=&tag=` | List files, with optional filters   | FR7           |
+| POST   | `/files`                         | Upload an encrypted file            | FR4           |
+| GET    | `/files/:id`                     | File metadata                       | FR5           |
+| GET    | `/files/:id/content`             | Download the encrypted file         | FR5           |
+| PATCH  | `/files/:id`                     | Move, rename, change tags or expiry | FR6, FR7, FR9 |
+| DELETE | `/files/:id`                     | Delete a file                       | FR8           |
+| POST   | `/files/:id/links`               | Create a time-limited share link    | FR16          |
+| GET    | `/links/:token`                  | Open a share link (no login needed) | FR16          |
 
 ### Groups
-| Method | URL | Description | Req. |
-|---|---|---|---|
-| GET | `/groups` | List the user's groups | FR11 |
-| POST | `/groups` | Create a group | FR11 |
-| GET | `/groups/:id` | Group details and members | FR11 |
-| DELETE | `/groups/:id` | Delete a group (owner only) | FR11 |
-| POST | `/groups/:id/invites` | Create an invite link | FR12 |
-| POST | `/invites/:id/accept` | Accept an invite and join the group | FR12 |
-| PATCH | `/groups/:id/members/:userId` | Change a member's role or send them the group key | FR12, FR13 |
-| DELETE | `/groups/:id/members/:userId` | Remove a member | FR13 |
-| PUT | `/groups/:id/keys` | Upload the new group key for every member (key rotation) | NFR7 |
-| GET | `/groups/:id/activity` | Group activity | FR15 |
+
+| Method | URL                           | Description                                              | Req.       |
+| ------ | ----------------------------- | -------------------------------------------------------- | ---------- |
+| GET    | `/groups`                     | List the user's groups                                   | FR11       |
+| POST   | `/groups`                     | Create a group                                           | FR11       |
+| GET    | `/groups/:id`                 | Group details and members                                | FR11       |
+| DELETE | `/groups/:id`                 | Delete a group (owner only)                              | FR11       |
+| POST   | `/groups/:id/invites`         | Create an invite link                                    | FR12       |
+| POST   | `/invites/:id/accept`         | Accept an invite and join the group                      | FR12       |
+| PATCH  | `/groups/:id/members/:userId` | Change a member's role or send them the group key        | FR12, FR13 |
+| DELETE | `/groups/:id/members/:userId` | Remove a member                                          | FR13       |
+| PUT    | `/groups/:id/keys`            | Upload the new group key for every member (key rotation) | NFR7       |
+| GET    | `/groups/:id/activity`        | Group activity                                           | FR15       |
 
 ## Details
 
 ### POST /auth/register
 
 Request:
+
 ```json
 {
   "name": "Nichita",
@@ -85,6 +89,7 @@ Request:
 ```
 
 Response `201 Created`:
+
 ```json
 {
   "id": "u_8f3a2c",
@@ -102,6 +107,7 @@ so the real password never leaves the device. The server stores only a hash of `
 ### POST /auth/login
 
 Request:
+
 ```json
 {
   "email": "nichita@example.com",
@@ -110,6 +116,7 @@ Request:
 ```
 
 Response `200 OK`:
+
 ```json
 {
   "token": "eyJhbGciOiJIUzI1NiIs...",
@@ -136,13 +143,14 @@ can't use the login form to find out which emails are registered.
 ### GET /files
 
 Query parameters (all optional):
+
 - `folderId`: only files in this folder
 - `groupId`: only files in this group
 - `tag`: only files with this tag
 
 Response `200 OK`: an array of File objects, as described in `data-model.md`.
 
-Errors: `401` no token, `403` if the folder or group belongs to someone else.
+Errors: `401` no token, `404` if the folder or group belongs to someone else.
 
 File names are encrypted, so the server can't search by name: the browser decrypts
 the names and filters them locally.
@@ -150,6 +158,7 @@ the names and filters them locally.
 ### POST /files
 
 Request: `multipart/form-data` with
+
 - `file`: the encrypted file
 - `metadata`: JSON with `encryptedName`, `folderId`, `groupId`, `mimeType`, `iv`, `encryptedKey`, `sha256`, `tags`, `expiresAt`
 
@@ -161,9 +170,10 @@ Errors: `400` invalid metadata, `401` no token, `403` read-only member or storag
 
 Response `200 OK`: the encrypted file as raw bytes (`Content-Type: application/octet-stream`).
 
-Errors: `401` no token, `403` no access to the file, `404` file not found.
+Errors: `401` no token, `404` no access to the file, `404` file not found.
 
 After the download, the browser:
+
 1. computes the SHA-256 of the received bytes and compares it with `sha256` from the metadata;
 2. if they don't match, it rejects the file, because it was altered on the server;
 3. otherwise it decrypts `encryptedKey`, then decrypts the file with AES-GCM using `iv`.
@@ -171,6 +181,7 @@ After the download, the browser:
 ### POST /groups/:id/invites
 
 Request:
+
 ```json
 {
   "email": "gaia@example.com",
@@ -179,6 +190,7 @@ Request:
 ```
 
 Response `201 Created`:
+
 ```json
 {
   "id": "inv_7d20a9",
@@ -196,6 +208,7 @@ Invites expire after 7 days.
 ### POST /invites/:id/accept
 
 Request:
+
 ```json
 {
   "signature": "a3f9c1e7b2..."
@@ -203,6 +216,7 @@ Request:
 ```
 
 Response `200 OK`:
+
 ```json
 {
   "groupId": "g_51d0e7",
