@@ -62,7 +62,7 @@ Database + file storage (encrypted data only)
 - **Frontend:** React, TypeScript, HTML, CSS
 - **Backend:** Node.js, Express, REST APIs, microservices
 - **Security:** Web Crypto API, JWT
-- **Database:** to be decided (PostgreSQL or MongoDB)
+- **Database:** MySQL
 
 ## Repository structure
 
