@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const { promisify } = require('util');
 const pool = require('../db');
 const jwt = require('jsonwebtoken');
+const requireAuth = require('../middleware/auth');
 
 const router = express.Router();
 const scrypt = promisify(crypto.scrypt);
@@ -82,6 +83,22 @@ router.post('/login', async (req, res) => {
       publicKey: user.public_key,
       encryptedPrivateKey: user.encrypted_private_key,
     });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
+router.get('/me', requireAuth, async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT id, name, email, storage_used, storage_limit, created_at
+       FROM users WHERE id = ?`,
+      [req.userId]
+    );
+    if (!rows[0]) return res.status(404).json({ error: 'User not found' });
+    res.json(rows[0]);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
