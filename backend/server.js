@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 5678;
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/folders', require('./routes/folders'));
 
 
 app.get('/api/health', async (req, res) => {
