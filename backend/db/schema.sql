@@ -22,3 +22,18 @@ CREATE TABLE IF NOT EXISTS folders (
     FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (parent_id) REFERENCES folders (id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS files (
+  id             VARCHAR(20)  PRIMARY KEY,
+  owner_id       VARCHAR(20)  NOT NULL,
+  folder_id      VARCHAR(20)  NULL,
+  encrypted_name TEXT         NOT NULL,
+  mime_type      VARCHAR(100) NOT NULL,
+  size           BIGINT       NOT NULL,
+  iv             VARCHAR(64)  NOT NULL,
+  encrypted_key  TEXT         NOT NULL,
+  sha256         CHAR(64)     NOT NULL,
+  created_at     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (owner_id)  REFERENCES users(id)   ON DELETE CASCADE,
+  FOREIGN KEY (folder_id) REFERENCES folders(id) ON DELETE CASCADE
+);
