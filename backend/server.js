@@ -17,6 +17,7 @@ app.use(express.json());
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/folders", require("./routes/folders"));
 app.use("/api/files", require("./routes/files"));
+app.use("/api/groups", require("./routes/groups").router);
 
 app.get("/api/health", async (req, res) => {
   try {

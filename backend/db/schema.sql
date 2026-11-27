@@ -37,3 +37,24 @@ CREATE TABLE IF NOT EXISTS files (
   FOREIGN KEY (owner_id)  REFERENCES users(id)   ON DELETE CASCADE,
   FOREIGN KEY (folder_id) REFERENCES folders(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS `groups` (
+  id             VARCHAR(20) PRIMARY KEY,
+  owner_id       VARCHAR(20) NOT NULL,
+  encrypted_name TEXT        NOT NULL,
+  key_version    INT         NOT NULL DEFAULT 1,
+  created_at     DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS group_members (
+  group_id            VARCHAR(20) NOT NULL,
+  user_id             VARCHAR(20) NOT NULL,
+  role                ENUM('owner', 'admin', 'member', 'read-only') NOT NULL,
+  status              ENUM('active', 'pending_key') NOT NULL,
+  encrypted_group_key TEXT        NULL,
+  joined_at           DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (group_id, user_id),
+  FOREIGN KEY (group_id) REFERENCES `groups`(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id)  REFERENCES users(id)    ON DELETE CASCADE
+);
