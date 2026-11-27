@@ -6,10 +6,8 @@ const requireAuth = require("../middleware/auth");
 const router = express.Router();
 router.use(requireAuth);
 
-function validName(name) {
-  return (
-    typeof name === "string" && name.trim().length > 0 && name.length <= 255
-  );
+function validEncryptedName(value) {
+  return typeof value === "string" && value.length > 0 && value.length <= 2048;
 }
 
 router.get("/", async (req, res) => {
@@ -19,10 +17,10 @@ router.get("/", async (req, res) => {
   }
   try {
     const [rows] = await pool.query(
-      `SELECT id, parent_id AS parentId, name, created_at AS createdAt
-       FROM folders
-       WHERE owner_id = ? AND parent_id <=> ?
-       ORDER BY name`,
+      `SELECT id, parent_id AS parentId, encrypted_name AS encryptedName, created_at AS createdAt
+        FROM folders
+        WHERE owner_id = ? AND parent_id <=> ?
+        ORDER BY created_at`,
       [req.userId, parentId],
     );
     res.json(rows);
@@ -33,9 +31,9 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { name, parentId = null } = req.body;
-  if (!validName(name)) {
-    return res.status(400).json({ error: "Invalid name" });
+  const { encryptedName, parentId = null } = req.body;
+  if (!validEncryptedName(encryptedName)) {
+    return res.status(400).json({ error: "Invalid encryptedName" });
   }
   if (parentId !== null && typeof parentId !== "string") {
     return res.status(400).json({ error: "Invalid parentId" });
@@ -53,13 +51,13 @@ router.post("/", async (req, res) => {
 
     const id = "fo_" + crypto.randomBytes(6).toString("hex");
     await pool.query(
-      "INSERT INTO folders (id, owner_id, parent_id, name) VALUES (?, ?, ?, ?)",
-      [id, req.userId, parentId, name.trim()],
+      "INSERT INTO folders (id, owner_id, parent_id, encrypted_name) VALUES (?, ?, ?, ?)",
+      [id, req.userId, parentId, encryptedName],
     );
     res.status(201).json({
       id,
       parentId,
-      name: name.trim(),
+      encryptedName,
       createdAt: new Date().toISOString(),
     });
   } catch (err) {
@@ -69,19 +67,19 @@ router.post("/", async (req, res) => {
 });
 
 router.patch("/:id", async (req, res) => {
-  const { name } = req.body;
-  if (!validName(name)) {
-    return res.status(400).json({ error: "Invalid name" });
+  const { encryptedName } = req.body;
+  if (!validEncryptedName(encryptedName)) {
+    return res.status(400).json({ error: "Invalid encryptedName" });
   }
 
   try {
     const [result] = await pool.query(
-      "UPDATE folders SET name = ? WHERE id = ? AND owner_id = ?",
-      [name.trim(), req.params.id, req.userId],
+      "UPDATE folders SET encrypted_name = ? WHERE id = ? AND owner_id = ?",
+      [encryptedName, req.params.id, req.userId],
     );
     if (result.affectedRows === 0)
       return res.status(404).json({ error: "Folder not found" });
-    res.json({ id: req.params.id, name: name.trim() });
+    res.json({ id: req.params.id, encryptedName });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
