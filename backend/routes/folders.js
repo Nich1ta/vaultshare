@@ -2,6 +2,7 @@ const express = require("express");
 const crypto = require("crypto");
 const pool = require("../db");
 const requireAuth = require("../middleware/auth");
+const { removeBlob } = require("../storage");
 
 const router = express.Router();
 router.use(requireAuth);
@@ -87,17 +88,47 @@ router.patch("/:id", async (req, res) => {
 });
 
 router.delete("/:id", async (req, res) => {
+  const conn = await pool.getConnection();
   try {
-    const [result] = await pool.query(
+    await conn.beginTransaction();
+
+    // Every file in this folder and in all its subfolders, at any depth
+    const [files] = await conn.query(
+      `WITH RECURSIVE tree AS (
+         SELECT id FROM folders WHERE id = ? AND owner_id = ?
+         UNION ALL
+         SELECT f.id FROM folders f JOIN tree t ON f.parent_id = t.id
+       )
+       SELECT id, size FROM files WHERE folder_id IN (SELECT id FROM tree)`,
+      [req.params.id, req.userId],
+    );
+
+    const [result] = await conn.query(
       "DELETE FROM folders WHERE id = ? AND owner_id = ?",
       [req.params.id, req.userId],
     );
-    if (result.affectedRows === 0)
+    if (result.affectedRows === 0) {
+      await conn.rollback();
       return res.status(404).json({ error: "Folder not found" });
+    }
+
+    const freed = files.reduce((sum, f) => sum + Number(f.size), 0);
+    if (freed > 0) {
+      await conn.query(
+        "UPDATE users SET storage_used = storage_used - ? WHERE id = ?",
+        [freed, req.userId],
+      );
+    }
+    await conn.commit();
+
+    for (const f of files) await removeBlob(f.id);
     res.status(204).end();
   } catch (err) {
+    await conn.rollback().catch(() => {});
     console.error(err);
     res.status(500).json({ error: "Server error" });
+  } finally {
+    conn.release();
   }
 });
 
