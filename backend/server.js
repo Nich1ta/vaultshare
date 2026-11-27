@@ -2,9 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const pool = require("./db");
 
-if (!process.env.JWT_SECRET) {
-  console.error("JWT_SECRET is missing. Add it to backend/.env");
-  process.exit(1);
+for (const name of ["JWT_SECRET", "INVITE_SECRET"]) {
+  if (!process.env[name]) {
+    console.error(`${name} is missing. Add it to backend/.env`);
+    process.exit(1);
+  }
 }
 
 const app = express();
@@ -18,6 +20,7 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/folders", require("./routes/folders"));
 app.use("/api/files", require("./routes/files"));
 app.use("/api/groups", require("./routes/groups").router);
+app.use("/api/invites", require("./routes/invites"));
 
 app.get("/api/health", async (req, res) => {
   try {

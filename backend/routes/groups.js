@@ -2,6 +2,9 @@ const express = require("express");
 const crypto = require("crypto");
 const pool = require("../db");
 const requireAuth = require("../middleware/auth");
+const { signInvite } = require("../invite-signature");
+
+const INVITE_ROLES = ["admin", "member", "read-only"];
 
 const router = express.Router();
 router.use(requireAuth);
@@ -129,6 +132,44 @@ router.delete("/:id", async (req, res) => {
 
     await pool.query("DELETE FROM `groups` WHERE id = ?", [req.params.id]);
     res.status(204).end();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+router.post("/:id/invites", async (req, res) => {
+  const { email, role } = req.body;
+  if (!isString(email, 255) || !INVITE_ROLES.includes(role)) {
+    return res.status(400).json({ error: "Invalid email or role" });
+  }
+
+  try {
+    const me = await getMembership(req.params.id, req.userId);
+    if (!me) return res.status(404).json({ error: "Group not found" });
+    if (me.role !== "owner" && me.role !== "admin") {
+      return res.status(403).json({ error: "Only owners and admins can invite" });
+    }
+
+    const id = "inv_" + crypto.randomBytes(8).toString("hex");
+    const normalizedEmail = email.trim().toLowerCase();
+
+    await pool.query(
+      `INSERT INTO invites (id, group_id, invited_by, email, role, expires_at)
+       VALUES (?, ?, ?, ?, ?, NOW() + INTERVAL 7 DAY)`,
+      [id, req.params.id, req.userId, normalizedEmail, role],
+    );
+
+    const signature = signInvite({ id, groupId: req.params.id, email: normalizedEmail, role });
+    const frontend = process.env.FRONTEND_URL || "http://localhost:5173";
+
+    res.status(201).json({
+      id,
+      link: `${frontend}/invite/${id}?sig=${signature}`,
+      signature,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });

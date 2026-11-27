@@ -58,3 +58,16 @@ CREATE TABLE IF NOT EXISTS group_members (
   FOREIGN KEY (group_id) REFERENCES `groups`(id) ON DELETE CASCADE,
   FOREIGN KEY (user_id)  REFERENCES users(id)    ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS invites (
+  id         VARCHAR(20)  PRIMARY KEY,
+  group_id   VARCHAR(20)  NOT NULL,
+  invited_by VARCHAR(20)  NOT NULL,
+  email      VARCHAR(255) NOT NULL,
+  role       ENUM('admin', 'member', 'read-only') NOT NULL,
+  expires_at DATETIME     NOT NULL,
+  used_at    DATETIME     NULL,
+  created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (group_id)   REFERENCES `groups`(id) ON DELETE CASCADE,
+  FOREIGN KEY (invited_by) REFERENCES users(id)    ON DELETE CASCADE
+);
