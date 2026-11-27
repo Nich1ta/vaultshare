@@ -20,20 +20,25 @@ async function verifyLoginKey(loginKey, stored) {
   return crypto.timingSafeEqual(candidate, Buffer.from(hash, "hex"));
 }
 
+function isString(...values) {
+  return values.every((v) => typeof v === "string" && v.length > 0);
+}
+
+const DUMMY_HASH =
+  crypto.randomBytes(16).toString("hex") +
+  ":" +
+  crypto.randomBytes(64).toString("hex");
+
 router.post("/register", async (req, res) => {
   const { name, email, loginKey, publicKey, encryptedPrivateKey, keySalt } =
     req.body;
 
   if (
-    !name ||
-    !email ||
-    !loginKey ||
-    !publicKey ||
-    !encryptedPrivateKey ||
-    !keySalt
+    !isString(name, email, loginKey, publicKey, encryptedPrivateKey, keySalt)
   ) {
-    return res.status(400).json({ error: "Missing required fields" });
+    return res.status(400).json({ error: "Missing or invalid fields" });
   }
+  const normalizedEmail = email.trim().toLowerCase();
 
   const id = "u_" + crypto.randomBytes(6).toString("hex");
 
@@ -43,12 +48,25 @@ router.post("/register", async (req, res) => {
     await pool.query(
       `INSERT INTO users (id, name, email, login_key_hash, public_key, encrypted_private_key, key_salt)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [id, name, email, loginKeyHash, publicKey, encryptedPrivateKey, keySalt],
+      [
+        id,
+        name,
+        normalizedEmail,
+        loginKeyHash,
+        publicKey,
+        encryptedPrivateKey,
+        keySalt,
+      ],
     );
 
     res
       .status(201)
-      .json({ id, name, email, createdAt: new Date().toISOString() });
+      .json({
+        id,
+        name,
+        email: normalizedEmail,
+        createdAt: new Date().toISOString(),
+      });
   } catch (err) {
     if (err.code === "ER_DUP_ENTRY") {
       return res.status(409).json({ error: "Email already registered" });
@@ -61,19 +79,25 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { email, loginKey } = req.body;
 
-  if (!email || !loginKey) {
-    return res.status(400).json({ error: "Missing required fields" });
+  if (!isString(email, loginKey)) {
+    return res.status(400).json({ error: "Missing or invalid fields" });
   }
+  const normalizedEmail = email.trim().toLowerCase();
 
   try {
-    const [rows] = await pool.query(
+       const [rows] = await pool.query(
       `SELECT id, name, email, login_key_hash, public_key, encrypted_private_key, key_salt
        FROM users WHERE email = ?`,
-      [email],
+      [normalizedEmail],  
     );
     const user = rows[0];
 
-    if (!user || !(await verifyLoginKey(loginKey, user.login_key_hash))) {
+    const valid = await verifyLoginKey(
+      loginKey,
+      user ? user.login_key_hash : DUMMY_HASH,
+    );
+
+    if (!user || !valid) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
