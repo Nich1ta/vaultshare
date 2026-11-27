@@ -10,7 +10,7 @@ All dates use ISO 8601 format (UTC). Sizes are in bytes.
   "id": "u_8f3a2c",
   "name": "Nichita",
   "email": "nichita@example.com",
-  "passwordHash": "$2b$12$Kix...",
+  "loginKeyHash": "9f2c1a7e...:4be81d03...",
   "publicKey": "MIIBIjANBgkq...",
   "encryptedPrivateKey": "U2FsdGVkX1...",
   "keySalt": "q8Zt3Lp0...",
@@ -20,13 +20,12 @@ All dates use ISO 8601 format (UTC). Sizes are in bytes.
 }
 ```
 
-| Field | Description |
-|---|---|
-| `passwordHash` | Hash of the login credential, never the password itself |
-| `publicKey` | Used by others to share files and group keys with this user |
+| Field                 | Description                                                                                      |
+| --------------------- | ------------------------------------------------------------------------------------------------ |
+| `loginKeyHash`        | scrypt hash of `loginKey`, stored as `salt:hash`. The password itself never reaches the server   |
+| `publicKey`           | Used by others to share files and group keys with this user                                      |
 | `encryptedPrivateKey` | The private key, encrypted in the browser with the user's personal key. The server can't read it |
-| `keySalt` | Salt used with PBKDF2 to derive the personal key from the password |
-
+| `keySalt`             | Salt used with PBKDF2 to derive the personal key from the password                               |
 
 ## Folder
 
@@ -35,12 +34,13 @@ All dates use ISO 8601 format (UTC). Sizes are in bytes.
   "id": "fo_2b91e4",
   "encryptedName": "Xk2pQ9vL...",
   "ownerId": "u_8f3a2c",
-  "groupId": null,
+  "parentId": null,
   "createdAt": "2026-11-02T10:15:00Z"
 }
 ```
 
-`groupId` is `null` for folders in the personal vault, or the group's id for shared folders.
+`parentId` is `null` for top-level folders, or the id of the parent folder.
+The name is encrypted in the browser, so the server can't read it.
 
 ## File
 
@@ -63,13 +63,13 @@ All dates use ISO 8601 format (UTC). Sizes are in bytes.
 }
 ```
 
-| Field | Description |
-|---|---|
-| `size` | Size of the encrypted file in bytes |
-| `iv` | Random value used by AES-GCM, different for every file |
+| Field          | Description                                                                    |
+| -------------- | ------------------------------------------------------------------------------ |
+| `size`         | Size of the encrypted file in bytes                                            |
+| `iv`           | Random value used by AES-GCM, different for every file                         |
 | `encryptedKey` | The file's AES key, encrypted with the owner's personal key (or the group key) |
-| `sha256` | Hash of the encrypted file, used to verify its integrity on download |
-| `expiresAt` | Expiry date for reminders, or `null` if the document doesn't expire |
+| `sha256`       | Hash of the encrypted file, used to verify its integrity on download           |
+| `expiresAt`    | Expiry date for reminders, or `null` if the document doesn't expire            |
 
 ## Group
 
@@ -97,12 +97,12 @@ All dates use ISO 8601 format (UTC). Sizes are in bytes.
 }
 ```
 
-| Field | Description |
-|---|---|
-| `members` | One entry per member of the group |
-| `role` | One of `"owner"`, `"admin"`, `"member"`, `"read-only"` |
+| Field               | Description                                                                                                                       |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `members`           | One entry per member of the group                                                                                                 |
+| `role`              | One of `"owner"`, `"admin"`, `"member"`, `"read-only"`                                                                            |
 | `encryptedGroupKey` | The group's AES key, encrypted with **this member's** public key. Each member has a different value, and only they can decrypt it |
-| `keyVersion` | Increases every time the group key is rotated (for example when a member is removed) |
+| `keyVersion`        | Increases every time the group key is rotated (for example when a member is removed)                                              |
 
 ## Invite
 
@@ -119,11 +119,11 @@ All dates use ISO 8601 format (UTC). Sizes are in bytes.
 }
 ```
 
-| Field | Description |
-|---|---|
-| `role` | Role the new member will receive when joining |
-| `expiresAt` | After this date the invite link no longer works |
-| `usedAt` | When the invite was accepted, or `null` if still pending. An invite can be used only once |
+| Field       | Description                                                                                          |
+| ----------- | ---------------------------------------------------------------------------------------------------- |
+| `role`      | Role the new member will receive when joining                                                        |
+| `expiresAt` | After this date the invite link no longer works                                                      |
+| `usedAt`    | When the invite was accepted, or `null` if still pending. An invite can be used only once            |
 | `signature` | HMAC of the invite data, computed by the server. A forged or modified invite link fails verification |
 
 ## Activity
@@ -142,8 +142,8 @@ All dates use ISO 8601 format (UTC). Sizes are in bytes.
 }
 ```
 
-| Field | Description |
-|---|---|
-| `actorId` | The user who performed the action |
-| `action` | One of `"group_created"`, `"member_joined"`, `"member_removed"`, `"role_changed"`, `"file_uploaded"`, `"file_deleted"`, `"key_rotated"` |
-| `details` | Extra data that depends on the action (for example which file or which member) |
+| Field     | Description                                                                                                                             |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `actorId` | The user who performed the action                                                                                                       |
+| `action`  | One of `"group_created"`, `"member_joined"`, `"member_removed"`, `"role_changed"`, `"file_uploaded"`, `"file_deleted"`, `"key_rotated"` |
+| `details` | Extra data that depends on the action (for example which file or which member)                                                          |

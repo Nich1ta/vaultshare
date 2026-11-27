@@ -1,11 +1,17 @@
 # Backend
 
-VaultShare REST APIs and microservices in Node.js + Express.
+VaultShare REST API in Node.js + Express, with a MySQL database.
 
-Planned services:
-- **Auth** – sign-up, login, JWT, roles, public keys
-- **Vault** – folders, groups, permissions, sharing
-- **Storage** – stores and serves encrypted files
-- **Notifications** – expiry dates, invites, group activity
+## Structure
+- `server.js`: starts the server and mounts the routers
+- `routes/auth.js`: register, login, current user
+- `routes/folders.js`: folders (create, list, rename, delete)
+- `middleware/auth.js`: checks the JWT on protected routes
+- `db/schema.sql`: database tables
 
-The server never receives plaintext files or keys.
+## Run
+1. Copy `.env.example` to `.env` and fill in the values
+2. `npm install`
+3. `npm run dev`
+
+The server never receives plaintext files, names or keys.

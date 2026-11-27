@@ -48,3 +48,8 @@ and the qualities it must have (non-functional requirements).
 ### Other
 - NFR11. Each user has a storage limit (10 GB by default).
 - NFR12. Cryptography uses only standard algorithms from the Web Crypto API; no algorithm is implemented from scratch.
+
+## Priorities
+
+- **Core (required for the exam):** FR1, FR2, FR4–FR8, FR10–FR14, NFR1–NFR8, NFR11, NFR12
+- **Optional (if time allows):** FR3, FR9, FR15, FR16

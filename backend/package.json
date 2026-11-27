@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "VaultShare REST APIs and microservices in Node.js + Express.",
+  "description": "VaultShare REST API in Node.js + Express.",
   "main": "server.js",
   "scripts": {
     "start": "node --env-file=.env server.js",

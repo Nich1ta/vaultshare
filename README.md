@@ -4,13 +4,14 @@
 
 VaultShare is a web application for storing personal files and sharing them within groups of users (study groups, roommates, work teams, families). Files are encrypted in the browser before upload: the server only stores encrypted data, unreadable even to whoever runs the system.
 
-> 🚧 **Work in progress.** Developed for the *Internet Technologies* course, University of Parma, academic year 2026/2027.
+> 🚧 **Work in progress.** Developed for the _Internet Technologies_ course, University of Parma, academic year 2026/2027.
 
 ---
 
 ## Planned features
 
 ### Personal vault
+
 - Drag & drop upload with progress bar
 - Folders, tags and favorites
 - In-browser preview of PDFs and images
@@ -18,11 +19,13 @@ VaultShare is a web application for storing personal files and sharing them with
 - Optional expiry dates on documents, with reminders
 
 ### Groups
+
 - Group creation and invite links
 - Roles: owner, admin, member, read-only
 - Shared folders and real-time group activity
 
 ### External sharing
+
 - Time-limited links to a single file, for people without an account
 
 ---
@@ -31,13 +34,13 @@ VaultShare is a web application for storing personal files and sharing them with
 
 All cryptographic operations run in the browser through the **Web Crypto API**, using standard implementations (no algorithm is implemented from scratch).
 
-| Mechanism | Used for |
-|---|---|
-| **AES-256-GCM** | Encrypting each file with its own random key |
-| **PBKDF2** | Deriving the personal key from the password, separate from the login credential |
-| **RSA-OAEP / ECDH** | Sharing keys with other group members |
-| **SHA-256** | File integrity checks |
-| **HMAC** | Session tokens and signed invite links |
+| Mechanism           | Used for                                                                        |
+| ------------------- | ------------------------------------------------------------------------------- |
+| **AES-256-GCM**     | Encrypting each file with its own random key                                    |
+| **PBKDF2**          | Deriving the personal key from the password, separate from the login credential |
+| **RSA-OAEP / ECDH** | Sharing keys with other group members                                           |
+| **SHA-256**         | File integrity checks                                                           |
+| **HMAC**            | Session tokens and signed invite links                                          |
 
 Other measures: permissions checked server-side on every request, group key rotation when a member leaves, login rate limiting, activity log.
 
@@ -46,22 +49,28 @@ Other measures: permissions checked server-side on every request, group key rota
 ## Architecture
 
 ```
-Browser (React + TypeScript)
+Browser (React + JavaScript)
   └─ Web Crypto API: encrypts and decrypts files and keys
           │  REST / JSON (encrypted data only)
-API Gateway (Node.js + Express)
-  ├── Auth service          → login, JWT, roles, public keys
-  ├── Vault service         → folders, groups, permissions, sharing
-  ├── Storage service       → stores and serves encrypted files
-  └── Notification service  → expiry dates, invites, activity
-Database + file storage (encrypted data only)
+          ▼
+Node.js + Express server
+  ├── /api/auth     → register, login, JWT
+  ├── /api/folders  → folders
+  ├── /api/files    → upload and download of encrypted files
+  └── /api/groups   → groups, invites, members, keys
+          │
+          ▼
+MySQL + file storage on disk (encrypted data only)
 ```
+
+The backend is a single Express server, organized in separate routers.
+Each router could later become its own microservice.
 
 ## Tech stack
 
-- **Frontend:** React, TypeScript, HTML, CSS
-- **Backend:** Node.js, Express, REST APIs, microservices
-- **Security:** Web Crypto API, JWT
+- **Frontend:** React (Vite), JavaScript, HTML, CSS
+- **Backend:** Node.js, Express, REST APIs
+- **Security:** Web Crypto API, JWT, scrypt
 - **Database:** MySQL
 
 ## Repository structure
@@ -69,7 +78,7 @@ Database + file storage (encrypted data only)
 ```
 vaultshare/
 ├── frontend/   # web app (mockups first, then React)
-├── backend/    # Node.js APIs and microservices
+├── backend/    # Node.js + Express REST API
 └── docs/       # design: data model, APIs, architecture
 ```
 
@@ -81,7 +90,8 @@ vaultshare/
 - [x] HTML and CSS interface mockups
 - [x] Data model and REST API design
 - [ ] Encryption prototype with the Web Crypto API
-- [ ] Backend: authentication, upload, folders
+- [x] Backend: authentication and folders
+- [ ] Backend: file upload and download
 - [ ] End-to-end file encryption
 - [ ] React frontend
 - [ ] Groups, invites and group keys

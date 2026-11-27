@@ -1,6 +1,6 @@
 # Project documentation
 
-- `data-model.md` – JSON examples of the resources (user, file, folder, group, invite)
-- `api.md` – list of REST endpoints (method, URL, request, response)
-- `architecture.md` – microservices diagram and description
-- `security.md` – encryption scheme and key management
+- `requirements.md`: functional and non-functional requirements
+- `data-model.md`: JSON examples of the resources (user, folder, file, group, invite, activity)
+- `api.md`: REST endpoints (method, URL, request, response)
+- `security.md`: encryption scheme and key management *(planned)*

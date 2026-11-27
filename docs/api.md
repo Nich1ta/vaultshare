@@ -36,12 +36,12 @@
 
 ### Folders
 
-| Method | URL                  | Description                             | Req. |
-| ------ | -------------------- | --------------------------------------- | ---- |
-| GET    | `/folders?parentId=` | List folders (top level if no parentId) | FR6  |
-| POST   | `/folders`           | Create a folder                         | FR6  |
-| PATCH  | `/folders/:id`       | Rename a folder                         | FR6  |
-| DELETE | `/folders/:id`       | Delete a folder                         | FR8  |
+| Method | URL                  | Description                                    | Req. |
+| ------ | -------------------- | ---------------------------------------------- | ---- |
+| GET    | `/folders?parentId=` | List folders (top level if no parentId)        | FR6  |
+| POST   | `/folders`           | Create a folder `{ encryptedName, parentId? }` | FR6  |
+| PATCH  | `/folders/:id`       | Rename a folder `{ encryptedName }`            | FR6  |
+| DELETE | `/folders/:id`       | Delete a folder                                | FR8  |
 
 ### Files
 
